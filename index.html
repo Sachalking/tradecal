@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <div class="main-wrapper">
+        <header class="app-header">
+            <div class="logo-title">
+                <span class="logo animate__animated animate__pulse animate__infinite animate__slower"><i class="fa-solid fa-chart-line"></i></span>
+                <div>
+                    <h1 class="animate__animated animate__fadeIn">Trading Calculator</h1>
+                    <p class="subtitle animate__animated animate__fadeIn animate__delay-1s">Plan your trades, manage risk, and get ML-powered insights</p>
+                </div>
+            </div>
+        </header>
+        <div class="content-grid">
+            <form class="inputs" id="tradeForm" autocomplete="off">
+                <h2><i class="fa-solid fa-sliders"></i> Trade Inputs</h2>
+                <div class="input-group">
+                    <label for="entryPrice">Entry Price:</label>
+                    <input type="number" id="entryPrice" step="any" placeholder="e.g., 100" required>
+                </div>
+                <div class="input-group">
+                    <label for="stopLossPrice">Stop-Loss Price:</label>
+                    <input type="number" id="stopLossPrice" step="any" placeholder="e.g., 95" required>
+                </div>
+                <div class="input-group">
+                    <label for="takeProfitPrice">Take-Profit Price:</label>
+                    <input type="number" id="takeProfitPrice" step="any" placeholder="e.g., 115" required>
+                </div>
+                <div class="input-group">
+                    <label for="positionSize">Position Size (units):</label>
+                    <input type="number" id="positionSize" step="any" placeholder="e.g., 10" required>
+                </div>
+                <div class="input-group">
+                    <label for="accountSize">Account Size ($):</label>
+                    <input type="number" id="accountSize" step="any" placeholder="e.g., 5000" required>
+                </div>
+                <div class="input-group">
+                    <label for="riskTolerance">Risk Tolerance (%):</label>
+                    <input type="number" id="riskTolerance" step="any" placeholder="e.g., 2" required>
+                </div>
+                <div class="input-group">
+                    <label for="assetType">Asset Type (Optional):</label>
+                    <input type="text" id="assetType" placeholder="e.g., BTC/USD, AAPL">
+                </div>
+                <div class="input-group">
+                    <label for="tradeType">Trade Type:</label>
+                    <select id="tradeType">
+                        <option value="long">Long (Buy)</option>
+                        <option value="short">Short (Sell)</option>
+                    </select>
+                </div>
+                <button id="calculateBtn" type="submit">
+                    <i class="fa-solid fa-calculator"></i> Calculate
+                </button>
+            </form>
+            <section class="outputs">
+                <div class="card results">
+                    <h2><i class="fa-solid fa-list-check"></i> Trade Results</h2>
+                    <ul class="results-list">
+                        <li><span>Risk per Unit:</span> <strong id="riskPerUnit">-</strong></li>
+                        <li><span>Total Risk:</span> <strong id="totalRisk">-</strong></li>
+                        <li><span>Profit per Unit:</span> <strong id="profitPerUnit">-</strong></li>
+                        <li><span>Total Profit:</span> <strong id="totalProfit">-</strong></li>
+                        <li><span>Risk/Reward Ratio (RRR):</span> <strong id="rrr">-</strong></li>
+                        <li><span>% of Account Risked:</span> <strong id="percentAccountRisked">-</strong></li>
+                    </ul>
+                </div>
+                <div class="card results-ml">
+                    <h2><i class="fa-solid fa-robot"></i> Machine Learning Prediction</h2>
+
+                    <div class="ml-prediction-container">
+                        <div class="ml-prediction-outcome">
+                            <div class="prediction-label">Prediction</div>
+                            <div class="prediction-value" id="mlPredictedOutcome">-</div>
+                            <div class="confidence-meter">
+                                <div class="confidence-label">Confidence</div>
+                                <div class="confidence-bar-container">
+                                    <div class="confidence-bar" id="confidenceBar"></div>
+                                </div>
+                                <div class="confidence-value" id="mlConfidenceScore">-</div>
+                            </div>
+                        </div>
+
+                        <div class="ml-features">
+                            <div class="features-header">Model Features</div>
+                            <div class="features-grid" id="mlFeatures">
+                                <!-- Features will be added dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="ml-notes">
+                            <div class="notes-header">Analysis Notes</div>
+                            <div class="notes-content" id="mlNotes">-</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <footer class="footer">
+            <p>Made with <i class="fa-solid fa-heart"></i> for traders | <i class="fa-solid fa-moon"></i> Dark Theme</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

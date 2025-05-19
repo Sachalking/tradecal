@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #e6e6e6;
+        }
+        button {
+            background-color: #3a7bd5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #242424;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #242424;
+            border-radius: 4px;
+        }
+        .result div {
+            margin-bottom: 10px;
+        }
+        .label {
+            font-weight: bold;
+            color: #3a7bd5;
+        }
+    </style>
+</head>
+<body>
+    <h1>ML API Test</h1>
+    <p>This page tests the connection to the ML prediction API.</p>
+    
+    <button id="testBtn">Test ML API</button>
+    
+    <div class="result">
+        <div><span class="label">Predicted Outcome:</span> <span id="outcome">-</span></div>
+        <div><span class="label">Confidence Score:</span> <span id="confidence">-</span></div>
+        <div><span class="label">Notes:</span> <span id="notes">-</span></div>
+    </div>
+    
+    <h3>Raw Response:</h3>
+    <pre id="rawResponse">-</pre>
+    
+    <script>
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            try {
+                document.getElementById('outcome').textContent = 'Loading...';
+                document.getElementById('confidence').textContent = '...';
+                document.getElementById('notes').textContent = 'Fetching prediction...';
+                document.getElementById('rawResponse').textContent = 'Waiting for response...';
+                
+                // Sample trade data
+                const requestData = {
+                    entry_price: 100,
+                    stop_loss: 95,
+                    take_profit: 115,
+                    position_size: 10,
+                    account_size: 5000,
+                    trade_type: 'long'
+                };
+                
+                console.log('Sending request to ML API...');
+                const response = await fetch('http://127.0.0.1:5001/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                console.log('Response status:', response.status);
+                
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+                document.getElementById('rawResponse').textContent = responseText;
+                
+                try {
+                    const data = JSON.parse(responseText);
+                    console.log('Parsed data:', data);
+                    
+                    document.getElementById('outcome').textContent = data.predicted_outcome || '-';
+                    document.getElementById('confidence').textContent = data.confidence_score !== undefined ? 
+                        data.confidence_score.toFixed(2) : '-';
+                    
+                    let notesText = data.notes || '-';
+                    if (data.model_features_used) {
+                        const featuresString = Object.entries(data.model_features_used)
+                            .map(([key, value]) => `${key}: ${typeof value === 'number' ? value.toFixed(2) : value}`)
+                            .join(', ');
+                        notesText += ` (Features: ${featuresString})`;
+                    }
+                    document.getElementById('notes').textContent = notesText;
+                    
+                } catch (e) {
+                    console.error('Failed to parse JSON response:', e);
+                    document.getElementById('outcome').textContent = 'Error parsing response';
+                    document.getElementById('confidence').textContent = '-';
+                    document.getElementById('notes').textContent = e.message;
+                }
+                
+            } catch (error) {
+                console.error('Error testing ML API:', error);
+                document.getElementById('outcome').textContent = 'Error';
+                document.getElementById('confidence').textContent = '-';
+                document.getElementById('notes').textContent = error.message;
+                document.getElementById('rawResponse').textContent = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
