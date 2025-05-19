@@ -131,9 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Make API request - try different URLs to handle various hosting scenarios
             const apiUrls = [
-                'http://127.0.0.1:5001/predict',  // Local development
-                'http://localhost:5001/predict',  // Alternative local
-                '/predict'                        // Same-origin (when served by Flask)
+                'https://tradecal.onrender.com/predict',  // Production URL
+                'http://127.0.0.1:5001/predict',          // Local development
+                'http://localhost:5001/predict',          // Alternative local
+                '/predict'                                // Same-origin (when served by Flask)
             ];
 
             let response = null;
@@ -188,6 +189,23 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 mlData = JSON.parse(responseText);
                 console.log("Parsed ML data:", mlData);
+
+                // Log specific fields for debugging
+                console.log("Prediction outcome:", mlData.predicted_outcome);
+                console.log("Confidence score:", mlData.confidence_score);
+                console.log("Notes:", mlData.notes);
+                console.log("Model features:", mlData.model_features_used);
+
+                // Check for any unexpected data structure
+                if (!mlData.predicted_outcome) {
+                    console.warn("Warning: Missing predicted_outcome in response");
+                }
+                if (mlData.confidence_score === undefined) {
+                    console.warn("Warning: Missing confidence_score in response");
+                }
+                if (!mlData.model_features_used) {
+                    console.warn("Warning: Missing model_features_used in response");
+                }
             } catch (e) {
                 console.error("Failed to parse JSON response:", e);
                 throw new Error("Invalid response from server: " + responseText.substring(0, 100) + "...");
